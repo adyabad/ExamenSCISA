@@ -14,5 +14,7 @@ namespace ExamenSCISA.Repositories
         public Task EditarCita(Cita cita);
 
         public Task EliminarCita(int citaId);
+
+        public Task<int> ValidarFechaCita(DateTime fecha);
     }
 }

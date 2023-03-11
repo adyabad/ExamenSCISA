@@ -66,4 +66,13 @@ AS begin
 	delete from Cita where VehiculoId = @vehiculoId
 end
 
+CREATE PROCEDURE SP_ValidarFechaCita
+	@fechaCita datetime
+AS begin
+	select 
+		count(*)
+		from Cita c 
+		where @fechaCita BETWEEN  c.FechaCita and  (select dateadd(hour, 2, c.FechaCita))
+end
+
 

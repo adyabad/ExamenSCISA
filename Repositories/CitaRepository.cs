@@ -100,5 +100,34 @@ namespace ExamenSCISA.Repositories
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public async Task<int> ValidarFechaCita(DateTime fecha)
+        {
+            int count = 0;
+            var cnn = new SqlConnection(_connectionString.ConnectionString);
+            try
+            {
+
+                cnn.Open();
+                SqlCommand command = new SqlCommand("SP_ValidarFechaCita", cnn);
+                command.Parameters.AddWithValue("@fechaCita", fecha);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    count = reader.GetInt32(0);                      
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                cnn.Close();
+            }
+            return count;
+        }
+    }
 }

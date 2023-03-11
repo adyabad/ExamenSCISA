@@ -27,6 +27,10 @@ namespace ExamenSCISA.Controllers
         [HttpPost]
         public async Task<IActionResult> GuardarCita(Cita cita)
         {           		
+            if(await _repository.ValidarFechaCita(cita.Fecha) > 0)
+            {
+                return Json("Fecha no válida");
+            }
             await _repository.CrearCita(cita);
             return Json("OK");
         }
