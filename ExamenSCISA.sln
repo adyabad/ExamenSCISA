@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExamenSCISA", "ExamenSCISA.csproj", "{E33DCEDA-27EE-4A53-8A0C-E15A8A153558}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E33DCEDA-27EE-4A53-8A0C-E15A8A153558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E33DCEDA-27EE-4A53-8A0C-E15A8A153558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E33DCEDA-27EE-4A53-8A0C-E15A8A153558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E33DCEDA-27EE-4A53-8A0C-E15A8A153558}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B76EC3B6-7D9C-4689-8EC3-28513F5523E8}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<ExamenSCISA.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de Clientes</h1>
+
+<p>
+    <a asp-action="CrearCliente">Agregar Cliente</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>           
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApellidoPaterno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApellidoMaterno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefono)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Domicilio)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>            
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Telefono)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Domicilio)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "EditarCliente", new { clienteId=item.ClienteId },new { @class = "btn btn-info" }) 
+                @Html.ActionLink("Detalle", "DetalleCliente", new { clienteId=item.ClienteId }, new { @class = "btn btn-success" }) 
+                <button class="btn btn-danger" onclick="eliminarClienteConfirm(@item.ClienteId)">Eliminar</button>    
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts {
+    <script>
+    function eliminarClienteConfirm(clienteId) {
+            
+            var result = confirm("¿Eliminar Cliente?");
+            if (result == true) {
+                eliminarCliente(clienteId);
+            } 
+        }
+
+        function eliminarCliente(clienteId){
+
+             $.ajax({             
+                type: 'POST',                
+                dataType: 'JSON',  
+                url: '/Cliente/EliminarCliente',  
+                data: { clienteId: clienteId },  
+                success:  
+                    function (response)  
+                    {  
+                        alert("El cliente ha sido eliminado exitosamente");
+                        location.reload();
+                    },  
+                error:  
+                    function (response)  
+                    {  
+                        alert("Error: " + response);  
+                    }  
+            });  
+        }
+    </script>
+}

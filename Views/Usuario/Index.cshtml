@@ -1,0 +1,87 @@
+﻿@model IEnumerable<ExamenSCISA.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Lista de Usuarios";
+}
+
+<h1>Lista de Usuarios</h1>
+
+<p>
+    <a asp-action="CrearUsuario">Agregar Usuario</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>            
+            <th>
+                Nombre
+            </th>
+            <th>
+                Apellido Paterno
+            </th>
+            <th>
+                Apellido Materno
+            </th>
+            <th>
+                Tipo de Usuario
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoUsuario.Tipo)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "EditarUsuario", new { usuarioId=item.UsuarioId },new { @class = "btn btn-info" }) 
+                <button class="btn btn-danger" onclick="eliminarUsuarioConfirm(@item.UsuarioId)">Eliminar</button>                
+                
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+    function eliminarUsuarioConfirm(usuarioId) {
+            
+            var result = confirm("¿Eliminar Usuario?");
+            if (result == true) {
+                eliminarUsuario(usuarioId);
+            } 
+        }
+
+        function eliminarUsuario(usuarioId){
+
+             $.ajax({             
+                type: 'POST',               
+                dataType: 'JSON',  
+                url: '/Usuario/EliminarUsuario',  
+                data: { usuarioId: usuarioId },  
+                success:  
+                    function (response)  
+                    {  
+                        alert("El usuario ha sido eliminado exitosamente");
+                        location.reload();
+                    },  
+                error:  
+                    function (response)  
+                    {  
+                        alert("Error: " + response);  
+                    }  
+            });  
+        }
+    </script>
+}

@@ -1,0 +1,277 @@
+﻿@model ExamenSCISA.ViewModels.DetalleCliente
+
+@{
+	ViewData["Title"] = "DetalleCliente";
+}
+
+<h1>Detalle Cliente</h1>
+<div>
+	@Html.ActionLink("Editar", "EditarCliente", new {  clienteId = Model.Cliente.ClienteId  }) |
+	<a asp-action="Index">Regresar</a>
+</div>
+<div>
+
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.ClienteId)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.ClienteId)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.Nombre)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.Nombre)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.ApellidoPaterno)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.ApellidoPaterno)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.ApellidoMaterno)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.ApellidoMaterno)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.Telefono)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.Telefono)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Cliente.Domicilio)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Cliente.Domicilio)
+		</dd>
+	</dl>
+</div>
+<br />
+<div>
+	<h1>Vehículos</h1>
+	<p>
+		<a class="btn btn-success" onclick="abrirModalVehiculo()">Agregar Vehículo</a>
+	</p>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					Marca
+				</th>
+				<th>
+					Modelo
+				</th>
+				<th>
+					Placas
+				</th>
+				<th>
+					Color
+				</th>
+				<th>
+					Última Cita
+				</th>
+				<th>
+					Próxima Cita
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.Vehiculos)
+			{
+				<tr>
+					<td>
+						@item.Marca
+					</td>
+					<td>
+						@item.Modelo
+					</td>
+					<td>
+						@item.Placas
+					</td>
+					<td>
+						@item.Color
+					</td>
+					<td>
+						@item.UltimaCita
+					</td>
+					<td>
+						@item.ProximaCita
+					</td>
+					<td>
+						<button class="btn btn-info" onclick="abrirModalCita(@item.VehiculoId)">Agregar Cita</button>
+						<button class="btn btn-danger" onclick="eliminarVehiculoConfirm(@item.VehiculoId)">Eliminar</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div id="divModal"></div>
+
+@section Scripts {
+<script>
+		function abrirModalVehiculo(){
+			$.ajax({
+					type: "POST",
+					url: "/Cliente/ModalVehiculo",
+					data: '',
+					contentType: "application/json; charset=utf-8",
+					dataType: "html",
+					success: function (response) {
+						$("#divModal").html(response);
+						$(".partialModal").modal('show');
+					},
+					failure: function (response) {
+						alert(response.responseText);
+					},
+					error: function (response) {
+						alert(response.responseText);
+					}
+				});
+		}
+
+		function cerrarModal(){
+			$('.partialModal').modal('hide');
+		}
+
+		function ValidarModalVehiculo(){
+			var marca = $( "#marca" ).val();
+			var modelo = $( "#modelo" ).val();
+			var placas = $( "#placas" ).val();
+			var color = $( "#color" ).val();			
+			if(marca == "" || modelo == "" || placas == "" || color == ""){
+				alert("Todos los campos son obligatorios");
+			}else{
+				var vehiculo = {};
+				vehiculo.ClienteId = '@Model.Cliente.ClienteId';
+				vehiculo.Marca = marca;
+				vehiculo.Modelo = modelo;
+				vehiculo.Placas = placas;
+				vehiculo.Color = color;
+				GuardarVehiculo(vehiculo);
+			}
+			
+		}
+
+		function GuardarVehiculo(vehiculo){			
+			
+			$.ajax({
+				type: 'POST',
+				data: {vehiculo: vehiculo},
+				dataType: 'JSON',
+				url: '/Cliente/GuardarVehiculo',				
+				success:
+					function (response)
+					{
+						alert("El vehiculo ha sido agregado exitosamente");
+						location.reload();
+					},
+				error:
+					function (response)
+					{
+						alert("Error: " + response);
+					}
+			});
+		}
+		function eliminarVehiculoConfirm(vehiculoId) {
+
+			var result = confirm("¿Eliminar Vehículo?");
+			if (result == true) {
+				eliminarVehiculo(vehiculoId);
+			}
+		}
+
+		function eliminarVehiculo(vehiculoId){
+		
+			 $.ajax({
+				type: 'POST',				
+				dataType: 'JSON',
+				url: '/Cliente/EliminarVehiculo',
+				data: { vehiculoId: vehiculoId },
+				success:
+					function (response)
+					{
+						console.log(response);
+						if(response == "Campos faltantes"){
+							alert("Todos los campos son obligatorios");
+						}else{
+							alert("El vehículo ha sido eliminado exitosamente");
+							location.reload();
+						}						
+					},
+				error:
+					function (response)
+					{
+						alert("Error: " + response);
+					}
+			});
+		}
+		var idVehiculoCita = 0;
+		function abrirModalCita(vehiculoId){
+			idVehiculoCita = vehiculoId;
+			$.ajax({
+					type: "POST",
+					url: "/Cita/ModalCita",
+					data: '',
+					contentType: "application/json; charset=utf-8",
+					dataType: "html",
+					success: function (response) {
+						$("#divModal").html(response);
+						$(".partialModal").modal('show');
+					},
+					failure: function (response) {
+						alert(response.responseText);
+					},
+					error: function (response) {
+						alert(response.responseText);
+					}
+				});
+		}
+
+		function ValidarModalCita(){
+			var fecha = $( "#fechaCita" ).val();
+			var fechaTerminacion = $( "#fechaTermino" ).val();
+			var comentarios = $( "#comentarios" ).val();						
+			if(fecha == "" || fechaTerminacion == "" || comentarios == ""){
+				alert("Todos los campos son obligatorios");
+			}else{
+				var cita = {};
+				cita.VehiculoId = idVehiculoCita;
+				cita.Fecha = fecha;
+				cita.FechaTerminacion = fechaTerminacion;
+				cita.comentarios = comentarios;
+				GuardarCita(cita);
+			}
+			
+		}
+		function GuardarCita(cita){			
+			console.log(cita);
+			$.ajax({
+				type: 'POST',
+				data: {cita: cita},
+				dataType: 'JSON',
+				url: '/Cita/GuardarCita',				
+				success:
+					function (response)
+					{
+						alert("La cita ha sido agregada exitosamente");
+						location.reload();
+					},
+				error:
+					function (response)
+					{
+						alert("Error: " + response);
+					}
+			});
+		}
+</script>
+}
+
+

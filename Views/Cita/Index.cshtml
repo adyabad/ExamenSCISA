@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ExamenSCISA.Models.Cita>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de Citas</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                Fecha Cita
+            </th>
+            <th>
+                Fecha Terminación
+            </th>
+            <th>
+                Comentarios
+            </th>
+            
+            <th>
+                Status
+            </th>
+            <th>
+                Cliente
+            </th>
+            
+            <th>
+                Vehiculo
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaTerminacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comentarios)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cliente)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Vehiculo)
+            </td>           
+           
+           
+        </tr>
+}
+    </tbody>
+</table>
